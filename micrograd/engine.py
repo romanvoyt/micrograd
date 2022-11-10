@@ -66,3 +66,28 @@ class Value:
 
     def __repr__(self):
         return f'Value(data={self.data}, grad={self.grad:.4f})'
+
+    def relu(self):
+        out = Value(0 if self.data < 0 else self.data, (self,), 'ReLU')
+
+        def _backward():
+            self.grad += (out.data > 0) * out.grad
+
+        out._backward = _backward
+        return out
+
+    def backward(self):
+        # topological order all the children in the graph
+        topo_list = []
+        visited = set()
+
+        def build_topo(vertex):
+            if vertex not in visited:
+                visited.add(vertex)
+                for child in vertex._prev:
+                    build_topo(child)
+                topo_list.append(vertex)
+        build_topo(self)
+        self.grad = 1
+        for v in reversed(topo_list):
+            v._backward()
