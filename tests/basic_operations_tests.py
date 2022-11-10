@@ -1,4 +1,5 @@
 from micrograd.engine import Value
+import graphviz
 
 
 def add_test():
@@ -42,3 +43,5 @@ if __name__ == '__main__':
     neg_test()
     radd_test()
     truediv_test()
+
+
