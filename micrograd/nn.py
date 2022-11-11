@@ -18,7 +18,7 @@ class Neuron(Module):
         self.non_linear = non_linear
 
     def __call__(self, x):
-        act = sum((wi, xi for wi, xi in zip(self.w, x)), self.b)
+        act = sum((wi*xi for wi, xi in zip(self.w, x)), self.b)
         return act.relu() if self.non_linear else act
 
     def parameters(self):
